@@ -27,10 +27,25 @@ export const fetchData = () => (dispatch) => {
 
 export const pushToApi = (data) => (dispatch) => {
   dispatch(startFetch());
-  axios
-    .post(apiEndPoint, data)
-    .then((res) => dispatch(fetchSuccess(res.data)))
-    .catch((err) => dispatch(fetchFailed(err)));
+  try {
+    if (!data.name) {
+      throw new Error('name is missing');
+    }
+    if (!data.position) {
+      throw new Error('position is missing');
+    }
+    if (!data.nickname) {
+      throw new Error('nickname is missing');
+    }
+    axios
+      .post(apiEndPoint, data)
+      .then((res) => dispatch(fetchSuccess(res.data)))
+      .catch((err) => {
+        dispatch(fetchFailed(err));
+      });
+  } catch (error) {
+    dispatch(fetchFailed(error.message));
+  }
 };
 
 //Task List:

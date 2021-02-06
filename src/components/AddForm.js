@@ -1,4 +1,5 @@
 import React from 'react';
+import { v1 as uuid } from 'uuid';
 
 class AddForm extends React.Component {
   state = {
@@ -11,10 +12,6 @@ class AddForm extends React.Component {
     formValid: false,
   };
 
-  componentDidUpdate() {
-    this.verifySmirf();
-  }
-
   handleChange(e) {
     e.preventDefault();
     this.setState({
@@ -26,23 +23,9 @@ class AddForm extends React.Component {
     });
   }
 
-  verifySmirf() {
-    for (const key in this.state.smurf) {
-      if (Object.hasOwnProperty.call(this.state.smurf, key)) {
-        const element = this.state.smurf[key];
-        if (key === 'description') return true;
-        if (element === '' || element === undefined) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-
   async handleSubmit(e) {
     e.preventDefault();
-    this.props.addSmurf(this.state.smurf);
+    this.props.addSmurf({ ...this.state.smurf, id: uuid() });
   }
 
   render() {
@@ -57,7 +40,6 @@ class AddForm extends React.Component {
               onChange={(e) => this.handleChange(e)}
               name="name"
               id="name"
-              required
             />
           </div>
           <div className="form-group">
@@ -67,7 +49,6 @@ class AddForm extends React.Component {
               onChange={(e) => this.handleChange(e)}
               name="position"
               id="position"
-              required
             />
           </div>
           <div className="form-group">
@@ -77,7 +58,6 @@ class AddForm extends React.Component {
               onChange={(e) => this.handleChange(e)}
               name="nickname"
               id="nickname"
-              required
             />
           </div>
           <div className="form-group">
