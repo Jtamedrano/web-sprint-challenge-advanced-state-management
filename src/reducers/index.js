@@ -1,14 +1,24 @@
-
 export const initialState = {
-}
+  smurfs: [],
+  error: "",
+  isLoading: false,
+};
 
-const reducer = ()=>{
-}
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "INIT_FETCH":
+      return { ...state, error: "", isLoading: true };
+    case "FETCH_SUCCESS":
+      return { ...state, isLoading: false, smurfs: action.payload };
+    default:
+      return state;
+  }
+};
 
 export default reducer;
 
 //Task List:
-//1. Add in the initialState needed to hold: 
+//1. Add in the initialState needed to hold:
 //      - an array of smurfs
 //      - a boolean indicating if the app is loading
 //      - error text
