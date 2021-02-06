@@ -27,40 +27,13 @@ export const fetchData = () => (dispatch) => {
 
 export const pushToApi = (data) => (dispatch) => {
   dispatch(startFetch());
-  // The following checks for any required fields being empty
-  try {
-    if (!data.name) {
-      throw new Error('name is missing');
-    }
-    if (!data.position) {
-      throw new Error('position is missing');
-    }
-    if (!data.nickname) {
-      throw new Error('nickname is missing');
-    }
-
-    // This will check and see if the db already has the name
-    axios.get(apiEndPoint).then((res) => {
-      for (const key in res.data) {
-        if (Object.hasOwnProperty.call(res.data, key)) {
-          const element = res.data[key].name;
-
-          if (element.toLowerCase() === data.name.toLowerCase()) {
-            throw new Error();
-          }
-        }
-      }
+  axios
+    .post(apiEndPoint, data)
+    .then((res) => dispatch(fetchSuccess(res.data)))
+    .catch((err) => {
+      // console.log(JSON.stringify(err));
+      dispatch(fetchFailed(err.response.data['Error']));
     });
-
-    axios
-      .post(apiEndPoint, data)
-      .then((res) => dispatch(fetchSuccess(res.data)))
-      .catch((err) => {
-        dispatch(fetchFailed(err.message));
-      });
-  } catch (error) {
-    dispatch(fetchFailed(error.message));
-  }
 };
 
 //Task List:
