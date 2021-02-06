@@ -46,7 +46,7 @@ export const pushToApi = (data) => (dispatch) => {
           const element = res.data[key].name;
 
           if (element.toLowerCase() === data.name.toLowerCase()) {
-            throw new Error('Smurf Already Exist');
+            throw new Error();
           }
         }
       }
