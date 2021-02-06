@@ -1,20 +1,36 @@
-import axios from "axios";
+import axios from 'axios';
 
+const apiEndPoint = 'http://localhost:3333/smurfs';
 //
 const startFetch = () => ({
-    type: "INIT_FETCH",
+  type: 'INIT_FETCH',
 });
 
 const fetchSuccess = (data) => ({
-    type: "FETCH_SUCCESS",
-    payload: data,
+  type: 'FETCH_SUCCESS',
+  payload: data,
+});
+const fetchFailed = (msg) => ({
+  type: 'FETCH_FAILED',
+  payload: msg,
 });
 
 export const fetchData = () => (dispatch) => {
-    dispatch(startFetch());
-    axios.get("http://localhost:3333/smurfs").then((res) => {
-        dispatch(fetchSuccess(res.data));
-    });
+  dispatch(startFetch());
+  axios
+    .get(apiEndPoint)
+    .then((res) => {
+      dispatch(fetchSuccess(res.data));
+    })
+    .catch((err) => dispatch(fetchFailed(err)));
+};
+
+export const pushToApi = (data) => (dispatch) => {
+  dispatch(startFetch());
+  axios
+    .post(apiEndPoint, data)
+    .then((res) => dispatch(fetchSuccess(res.data)))
+    .catch((err) => dispatch(fetchFailed(err)));
 };
 
 //Task List:

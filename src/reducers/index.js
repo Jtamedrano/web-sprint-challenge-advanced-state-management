@@ -1,15 +1,17 @@
 export const initialState = {
   smurfs: [],
-  error: "",
+  error: '',
   isLoading: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "INIT_FETCH":
-      return { ...state, error: "", isLoading: true };
-    case "FETCH_SUCCESS":
+    case 'INIT_FETCH':
+      return { ...state, error: '', isLoading: true };
+    case 'FETCH_SUCCESS':
       return { ...state, isLoading: false, smurfs: action.payload };
+    case 'FETCH_FAILED':
+      return { ...state, isLoading: false, error: action.payload };
     default:
       return state;
   }

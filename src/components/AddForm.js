@@ -1,21 +1,115 @@
 import React from 'react';
 
 class AddForm extends React.Component {
+  state = {
+    smurf: {
+      name: '',
+      position: '',
+      nickname: '',
+      description: '',
+    },
+    formValid: false,
+  };
 
-    render() {
-        return(<section>
-            <h2>Add Smurf</h2>
-            <form>
-                <div className="form-group">
-                    <label htmlFor="name">Name:</label><br/>
-                    <input onChange={this.handleChange} name="name" id="name" />
-                </div>
+  componentDidUpdate() {
+    this.verifySmirf();
+  }
 
-                <div data-testid="errorAlert" className="alert alert-danger" role="alert">Error: </div>
-                <button>Submit Smurf</button>
-            </form>
-        </section>);
+  handleChange(e) {
+    e.preventDefault();
+    this.setState({
+      ...this.state,
+      smurf: {
+        ...this.state.smurf,
+        [e.target.name]: e.target.value,
+      },
+    });
+  }
+
+  verifySmirf() {
+    for (const key in this.state.smurf) {
+      if (Object.hasOwnProperty.call(this.state.smurf, key)) {
+        const element = this.state.smurf[key];
+        if (key === 'description') return true;
+        if (element === '' || element === undefined) {
+          return false;
+        }
+      }
     }
+
+    return true;
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault();
+    this.props.addSmurf(this.state.smurf);
+  }
+
+  render() {
+    return (
+      <section>
+        <h2>Add Smurf</h2>
+        <form onSubmit={(e) => this.handleSubmit(e)}>
+          <div className="form-group">
+            <label htmlFor="name">Name:</label>
+            <br />
+            <input
+              onChange={(e) => this.handleChange(e)}
+              name="name"
+              id="name"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="position">Position:</label>
+            <br />
+            <input
+              onChange={(e) => this.handleChange(e)}
+              name="position"
+              id="position"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="nickname">Nickname:</label>
+            <br />
+            <input
+              onChange={(e) => this.handleChange(e)}
+              name="nickname"
+              id="nickname"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">description:</label>
+            <br />
+            <textarea
+              onChange={(e) => this.handleChange(e)}
+              name="description"
+              id="description"
+            />
+          </div>
+
+          {this.props.error && (
+            <div
+              data-testid="errorAlert"
+              className="alert alert-danger"
+              role="alert"
+            >
+              Error: {this.props.error}
+            </div>
+          )}
+          <button
+            type="submit"
+            disabled={this.state.formValid}
+            className="btn btn-primary"
+          >
+            Submit Smurf
+          </button>
+        </form>
+      </section>
+    );
+  }
 }
 
 export default AddForm;
